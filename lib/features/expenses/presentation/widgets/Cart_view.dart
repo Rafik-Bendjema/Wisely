@@ -33,8 +33,8 @@ class _CartButtonState extends State<CartButton> {
           width: 50,
           right: -25,
           child: Icon(
-            widget.isexpense ? Icons.arrow_circle_up : Icons.arrow_circle_down,
-            color: widget.isexpense ? Colors.green : Colors.red,
+            widget.isexpense ? Icons.arrow_circle_down : Icons.arrow_circle_up,
+            color: widget.isexpense ? Colors.red : Colors.green,
             size: 50,
           ),
         )
