@@ -70,25 +70,7 @@ class _HomeViewState extends State<HomeView> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => FutureBuilder(
-                                            future: Hive.openBox("Expanses"),
-                                            builder: (context, snpashot) {
-                                              if (snpashot.connectionState ==
-                                                  ConnectionState.done) {
-                                                return ExpansesView();
-                                              }
-                                              if (snpashot.connectionState ==
-                                                  ConnectionState.waiting) {
-                                                return CircularProgressIndicator();
-                                              }
-                                              if (snpashot.hasError) {
-                                                return Text(
-                                                    snpashot.error.toString());
-                                              }
-                                              return AlertDialog(
-                                                content: Text("error"),
-                                              );
-                                            })));
+                                        builder: (context) => ExpansesView()));
                               },
                               child: CartButton(
                                 isexpense: true,

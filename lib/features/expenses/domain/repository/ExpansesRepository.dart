@@ -1,6 +1,6 @@
 import 'package:wisely/features/expenses/domain/entites/Expanses.dart';
 
-abstract class ExansesRepository {
+abstract class ExpansesRepository {
   //add expanse
   Future<bool> addExpanse(Expanses e);
   //delete expanse

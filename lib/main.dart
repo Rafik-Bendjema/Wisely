@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wisely/core/splash/presentation/Splash_screen.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:wisely/features/expenses/data/hive/ExpansesDb.dart';
 
 import 'features/expenses/domain/entites/Expanses.dart';
 
@@ -10,7 +12,9 @@ void main() async {
   final appDirectory = await path_provider.getApplicationDocumentsDirectory();
   Hive.init(appDirectory.path);
   Hive.registerAdapter(ExpansesAdapter());
-  runApp(const MainApp());
+  Hive.close();
+
+  runApp(ProviderScope(child: MainApp()));
 }
 
 class MainApp extends StatefulWidget {
@@ -22,6 +26,16 @@ class MainApp extends StatefulWidget {
 
 class _MainAppState extends State<MainApp> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  void initbox() async {
+    ExpansesDb expansesDb = ExpansesDbImpl();
+    await expansesDb.openBox();
+  }
+
   void dispose() {
     // TODO: implement dispose
     super.dispose();

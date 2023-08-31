@@ -1,6 +1,8 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wisely/core/home/presentation/home_view.dart';
+import '../../../features/expenses/data/hive/ExpansesDb.dart';
 import 'clipper.dart';
 
 class Splash extends StatefulWidget {
@@ -48,6 +50,17 @@ class _SplashState extends State<Splash> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Consumer(builder: (context, ref, widget) {
+                if (_opacity == 1) {
+                  print("piiipoo");
+                  ExpansesDb expansesDb = ExpansesDbImpl();
+                  expansesDb.getAllExpenses(ref);
+                }
+
+                return SizedBox(
+                  height: 0,
+                );
+              }),
               AnimatedOpacity(
                 duration: Duration(seconds: 3),
                 opacity: _opacity,

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wisely/features/expenses/presentation/widgets/AddExapnse.dart';
-import 'package:wisely/features/expenses/presentation/widgets/dividers.dart';
 
 import '../../../../core/resources/colors.dart';
-import '../widgets/ExpenseTile.dart';
+import '../widgets/ExpansesList.dart';
 
 class ExpansesView extends StatefulWidget {
   const ExpansesView({super.key});
@@ -48,11 +47,7 @@ class _ExpansesViewState extends State<ExpansesView> {
                 SizedBox(
                   height: 20,
                 ),
-                dividers("today"),
-                SizedBox(
-                  height: 20,
-                ),
-                expenseTile(context, "10 eggs", 200)
+                Expanded(child: ExpansesList())
               ],
             ),
           )),

@@ -20,19 +20,24 @@ class ExpansesAdapter extends TypeAdapter<Expanses> {
       title: fields[0] as String,
       amount: fields[1] as int,
       category: fields[2] as Category?,
-    );
+      date: fields[3] as DateTime,
+    )..id = fields[4] as String;
   }
 
   @override
   void write(BinaryWriter writer, Expanses obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
       ..write(obj.amount)
       ..writeByte(2)
-      ..write(obj.category);
+      ..write(obj.category)
+      ..writeByte(3)
+      ..write(obj.date)
+      ..writeByte(4)
+      ..write(obj.id);
   }
 
   @override

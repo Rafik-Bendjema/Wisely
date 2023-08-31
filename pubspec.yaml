@@ -17,6 +17,8 @@ dependencies:
   hive: 
   hive_flutter: 
   path_provider: 
+  uuid:
+  intl: 
 
 dev_dependencies:
   flutter_test:
@@ -24,6 +26,7 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   hive_generator: 
   build_runner: 
+  
 
 flutter:
   uses-material-design: true
