@@ -31,16 +31,24 @@ class _GoalBarState extends State<GoalBar> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        RichText(
-          text: TextSpan(children: <TextSpan>[
-            TextSpan(
-                text: "13487",
-                style: TextStyle(fontSize: 15, color: Colors.red)),
-            TextSpan(
-                text: ".00", style: TextStyle(fontSize: 10, color: Colors.red)),
-            TextSpan(
-                text: " dz", style: TextStyle(fontSize: 5, color: text_color))
-          ]),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            RichText(
+              text: TextSpan(children: <TextSpan>[
+                TextSpan(
+                    text: "13487",
+                    style: TextStyle(fontSize: 15, color: Colors.red)),
+                TextSpan(
+                    text: ".00",
+                    style: TextStyle(fontSize: 10, color: Colors.red)),
+                TextSpan(
+                    text: " dz",
+                    style: TextStyle(fontSize: 5, color: text_color))
+              ]),
+            ),
+            TextButton(onPressed: () {}, child: Text("edit"))
+          ],
         ),
         Stack(children: [
           Container(

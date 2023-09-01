@@ -5,7 +5,7 @@ import 'package:wisely/features/budget_categ/presentation/widgets/Bcateg_Card.da
 import 'package:wisely/features/categorise/presentation/widgets/CategoryCard.dart';
 import 'package:wisely/features/expenses/presentation/pages/ExpensesView.dart';
 import 'package:wisely/features/expenses/presentation/widgets/Cart_view.dart';
-import 'package:wisely/features/incomes/presentation/IncomesView.dart';
+import 'package:wisely/features/incomes/presentation/pages/IncomesView.dart';
 import 'package:wisely/features/stats/presentation/widgets/GoalBar.dart';
 
 class HomeView extends StatefulWidget {

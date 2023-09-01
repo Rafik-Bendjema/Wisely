@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wisely/features/expenses/domain/entites/Expanses.dart';
-import 'package:wisely/features/expenses/data/repository/Expanses_impl.dart'
-    as el;
-import 'package:wisely/features/expenses/domain/repository/ExpansesRepository.dart';
 
 import '../../data/hive/ExpansesDb.dart';
-import '../../data/repository/Expanses_impl.dart';
 import 'package:intl/intl.dart';
 
 class AddExpanse extends StatefulWidget {
-  const AddExpanse({super.key});
+  final Expanses? e;
+  AddExpanse({super.key, this.e});
 
   @override
   State<AddExpanse> createState() => _AddExpanseState();
@@ -21,14 +18,28 @@ class _AddExpanseState extends State<AddExpanse> {
   late int amount;
   late DateTime dateTime = DateTime.now();
   late TextEditingController date;
+  late Expanses? _destination;
+
+  //controllers
+  TextEditingController title_cntrl = TextEditingController();
+  TextEditingController amount_cntrl = TextEditingController();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    print("init state");
-    date =
-        TextEditingController(text: DateFormat("dd-MM-yyyy").format(dateTime));
+
+    _destination = widget.e;
+    if (_destination != null) {
+      title_cntrl = TextEditingController(text: _destination!.title);
+      amount_cntrl =
+          TextEditingController(text: _destination!.amount.toString());
+      date = TextEditingController(
+          text: DateFormat("dd-MM-yyyy").format(_destination!.date));
+    } else {
+      date = TextEditingController(
+          text: DateFormat("dd-MM-yyyy").format(dateTime));
+    }
   }
 
   void verification(WidgetRef ref) async {
@@ -37,10 +48,20 @@ class _AddExpanseState extends State<AddExpanse> {
 
       _formKey.currentState!.save();
       Expanses e = Expanses(title: title, amount: amount, date: dateTime);
-      bool status = await expansesDb.addExpanseDb(ref, e).then((value) {
-        Navigator.pop(context);
-        return true;
-      });
+      bool status;
+      if (_destination == null) {
+        status = await expansesDb.addExpanseDb(ref, e).then((value) {
+          Navigator.pop(context);
+          return true;
+        });
+      } else {
+        status =
+            await expansesDb.editExpenses(ref, e, _destination!).then((value) {
+          Navigator.pop(context);
+          return true;
+        });
+      }
+
       if (!status) {
         print("error");
       }
@@ -62,6 +83,7 @@ class _AddExpanseState extends State<AddExpanse> {
           SizedBox(
               width: MediaQuery.of(context).size.width * 0.7,
               child: TextFormField(
+                controller: title_cntrl,
                 onSaved: (newValue) {
                   title = newValue!;
                 },
@@ -83,6 +105,7 @@ class _AddExpanseState extends State<AddExpanse> {
                 SizedBox(
                     width: MediaQuery.of(context).size.width * 0.60,
                     child: TextFormField(
+                      controller: amount_cntrl,
                       keyboardType: TextInputType.number,
                       onSaved: (newValue) {
                         amount = int.parse(newValue!);
@@ -135,7 +158,7 @@ class _AddExpanseState extends State<AddExpanse> {
                 onPressed: () {
                   verification(ref);
                 },
-                child: Text("Add")),
+                child: (_destination == null) ? Text("Add") : Text("edit")),
           )))
         ]),
       ),

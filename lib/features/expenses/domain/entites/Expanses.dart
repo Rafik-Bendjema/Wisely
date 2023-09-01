@@ -6,7 +6,7 @@ part 'Expanses.g.dart';
 
 @HiveType(typeId: 0)
 class Expanses {
-  var uuid = Uuid();
+  Uuid uuid = Uuid();
   @HiveField(0)
   final String title;
   @HiveField(1)

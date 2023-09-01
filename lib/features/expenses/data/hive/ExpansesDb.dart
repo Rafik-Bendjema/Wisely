@@ -9,6 +9,7 @@ abstract class ExpansesDb {
   Future<bool> addExpanseDb(WidgetRef ref, Expanses e);
   Future<bool> deleteExpanseDb(WidgetRef ref, Expanses e);
   Future<void> getAllExpenses(WidgetRef ref);
+  Future<bool> editExpenses(WidgetRef ref, Expanses newE, Expanses oldE);
 }
 
 class ExpansesDbImpl implements ExpansesDb {
@@ -43,6 +44,20 @@ class ExpansesDbImpl implements ExpansesDb {
       ref.read(expensesProvider2.notifier).add(e);
     } catch (e) {
       print("error while adding to the box ${e.toString()}");
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  Future<bool> editExpenses(WidgetRef ref, Expanses newE, Expanses oldE) async {
+    //delete the previous object
+    bool state = await deleteExpanseDb(ref, oldE);
+    //add a new one
+    if (state) {
+      addExpanseDb(ref, newE);
+    } else {
+      print("error in adding expanse");
       return false;
     }
     return true;

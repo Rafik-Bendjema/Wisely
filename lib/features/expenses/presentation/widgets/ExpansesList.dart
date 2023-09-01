@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:wisely/features/expenses/data/hive/ExpansesDb.dart';
-import 'package:wisely/features/expenses/domain/entites/Expanses.dart';
 import 'package:wisely/features/expenses/domain/riverpod/ExpensesProvider.dart';
 import 'package:wisely/features/expenses/presentation/widgets/dividers.dart';
 

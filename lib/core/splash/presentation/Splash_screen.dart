@@ -2,6 +2,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wisely/core/home/presentation/home_view.dart';
+import 'package:wisely/features/incomes/data/hive/IncomeDb.dart';
 import '../../../features/expenses/data/hive/ExpansesDb.dart';
 import 'clipper.dart';
 
@@ -52,9 +53,10 @@ class _SplashState extends State<Splash> {
             children: [
               Consumer(builder: (context, ref, widget) {
                 if (_opacity == 1) {
-                  print("piiipoo");
                   ExpansesDb expansesDb = ExpansesDbImpl();
+                  IncomeDb incomeDb = IncomeDbImpl();
                   expansesDb.getAllExpenses(ref);
+                  incomeDb.getAllIncomes(ref);
                 }
 
                 return SizedBox(

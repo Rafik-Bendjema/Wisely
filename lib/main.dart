@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wisely/core/splash/presentation/Splash_screen.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:wisely/features/expenses/data/hive/ExpansesDb.dart';
+import 'package:wisely/features/incomes/domain/entities/income.dart';
 
 import 'features/expenses/domain/entites/Expanses.dart';
 
@@ -12,7 +13,7 @@ void main() async {
   final appDirectory = await path_provider.getApplicationDocumentsDirectory();
   Hive.init(appDirectory.path);
   Hive.registerAdapter(ExpansesAdapter());
-  Hive.close();
+  Hive.registerAdapter(IncomeAdapter());
 
   runApp(ProviderScope(child: MainApp()));
 }
