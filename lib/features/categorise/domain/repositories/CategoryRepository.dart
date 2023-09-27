@@ -1,4 +1,4 @@
-import 'package:wisely/features/categorise/domain/entitties/category.dart';
+import 'package:wisely/features/categorise/domain/entitties/categoryy.dart';
 
 abstract class CategoryRepository {
   //add category

@@ -3,7 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wisely/features/expenses/domain/riverpod/ExpensesProvider.dart';
 import 'package:wisely/features/expenses/presentation/widgets/dividers.dart';
 
-import 'DeletingDialog.dart';
+import '../../../../core/Dialogs/DeletingDialog.dart';
 import 'ExpenseTile.dart';
 
 class ExpansesList extends ConsumerWidget {

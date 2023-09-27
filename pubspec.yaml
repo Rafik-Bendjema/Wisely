@@ -19,6 +19,7 @@ dependencies:
   path_provider: 
   uuid:
   intl: 
+  flutter_iconpicker: 
 
 dev_dependencies:
   flutter_test:

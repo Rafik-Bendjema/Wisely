@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:wisely/core/resources/colors.dart';
 import 'package:wisely/features/budget_categ/presentation/widgets/Bcateg_Card.dart';
+import 'package:wisely/features/categorise/presentation/widgets/AddCategory.dart';
 import 'package:wisely/features/categorise/presentation/widgets/CategoryCard.dart';
+import 'package:wisely/features/categorise/presentation/widgets/CategoryList.dart';
 import 'package:wisely/features/expenses/presentation/pages/ExpensesView.dart';
 import 'package:wisely/features/expenses/presentation/widgets/Cart_view.dart';
 import 'package:wisely/features/incomes/presentation/pages/IncomesView.dart';
@@ -19,15 +21,14 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(color: background_color),
-        child: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
+      body: SingleChildScrollView(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          decoration: BoxDecoration(color: background_color),
+          child: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.all(10),
               child: Column(
                 children: [
                   SizedBox(
@@ -118,7 +119,12 @@ class _HomeViewState extends State<HomeView> {
                           style: TextStyle(fontSize: 15, color: text_color),
                         ),
                         TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) =>
+                                      Dialog(child: AddCategory()));
+                            },
                             child: Text(
                               "ADD +",
                               style:
@@ -127,16 +133,7 @@ class _HomeViewState extends State<HomeView> {
                       ],
                     ),
                   ),
-                  for (int i = 0; i < 5; i++)
-                    Column(
-                      children: [
-                        CategoryCard(
-                            title: "title", amount: 2938, icon: "icon"),
-                        SizedBox(
-                          height: 10,
-                        )
-                      ],
-                    ),
+                  Expanded(child: CategoryList())
                 ],
               ),
             ),

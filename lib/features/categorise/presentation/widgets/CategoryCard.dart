@@ -4,8 +4,8 @@ import 'package:wisely/core/resources/colors.dart';
 class CategoryCard extends StatefulWidget {
   final String title;
   final double amount;
-  final String icon;
-  const CategoryCard(
+  final IconData? icon;
+  CategoryCard(
       {super.key,
       required this.title,
       required this.amount,
@@ -17,7 +17,7 @@ class CategoryCard extends StatefulWidget {
 
 class _CategoryCardState extends State<CategoryCard> {
   late String title = widget.title;
-  late String icon = widget.icon;
+  late IconData? icon = widget.icon;
   late double amount = widget.amount;
 
   @override
@@ -48,7 +48,7 @@ class _CategoryCardState extends State<CategoryCard> {
           RichText(
             text: TextSpan(children: <TextSpan>[
               TextSpan(
-                  text: "1491",
+                  text: amount.toInt().toString(),
                   style: TextStyle(fontSize: 35, color: tertiary_color)),
               TextSpan(
                   text: ".00",
@@ -62,7 +62,7 @@ class _CategoryCardState extends State<CategoryCard> {
             width: 7,
           ),
           Icon(
-            Icons.train,
+            icon,
             color: Colors.white,
             size: 50,
           )
