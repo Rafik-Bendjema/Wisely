@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wisely/features/expenses/domain/entites/Expanses.dart';
+import 'package:wisely/features/expenses/presentation/widgets/categoryChoise.dart';
 
 import '../../data/hive/ExpansesDb.dart';
 import 'package:intl/intl.dart';
@@ -23,6 +24,7 @@ class _AddExpanseState extends State<AddExpanse> {
   //controllers
   TextEditingController title_cntrl = TextEditingController();
   TextEditingController amount_cntrl = TextEditingController();
+  TextEditingController category_cntrl = TextEditingController();
 
   @override
   void initState() {
@@ -72,14 +74,13 @@ class _AddExpanseState extends State<AddExpanse> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 200,
       width: MediaQuery.of(context).size.width * 0.9,
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(20))),
       child: Form(
         key: _formKey,
-        child: Column(children: [
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
           SizedBox(
               width: MediaQuery.of(context).size.width * 0.7,
               child: TextFormField(
@@ -124,42 +125,49 @@ class _AddExpanseState extends State<AddExpanse> {
               ],
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                  child: TextField(
-                textAlign: TextAlign.center,
-                readOnly: true,
-                controller: date,
-              )),
-              TextButton(
-                  onPressed: () async {
-                    var choosedDate = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime.parse("2012-01-01"),
-                        lastDate: DateTime.now());
-                    if (choosedDate != null && choosedDate != dateTime) {
-                      setState(() {
-                        dateTime = choosedDate;
-                        date = TextEditingController(
-                            text: DateFormat("dd-MM-yyyy").format(dateTime));
-                      });
-                    }
-                  },
-                  child: Text("Pick a date"))
-            ],
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.7,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                    child: TextField(
+                  textAlign: TextAlign.center,
+                  readOnly: true,
+                  controller: date,
+                )),
+                TextButton(
+                    onPressed: () async {
+                      var choosedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime.parse("2012-01-01"),
+                          lastDate: DateTime.now());
+                      if (choosedDate != null && choosedDate != dateTime) {
+                        setState(() {
+                          dateTime = choosedDate;
+                          date = TextEditingController(
+                              text: DateFormat("dd-MM-yyyy").format(dateTime));
+                        });
+                      }
+                    },
+                    child: Text("Pick a date"))
+              ],
+            ),
           ),
-          Expanded(
+          SizedBox(
+              width: MediaQuery.of(context).size.width * 0.7,
+              child: CategoryField()),
+          SizedBox(
+              height: 100,
               child: Center(
                   child: Consumer(
-            builder: (context, ref, widget) => TextButton(
-                onPressed: () {
-                  verification(ref);
-                },
-                child: (_destination == null) ? Text("Add") : Text("edit")),
-          )))
+                builder: (context, ref, widget) => TextButton(
+                    onPressed: () {
+                      verification(ref);
+                    },
+                    child: (_destination == null) ? Text("Add") : Text("edit")),
+              )))
         ]),
       ),
     );

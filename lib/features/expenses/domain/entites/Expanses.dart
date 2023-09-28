@@ -17,6 +17,7 @@ class Expanses {
   final DateTime date;
   @HiveField(4)
   late String id;
+  @HiveField(5)
   Expanses(
       {required this.title,
       required this.amount,
