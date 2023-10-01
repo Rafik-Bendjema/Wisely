@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wisely/features/categorise/data/hive/CategoryDb.dart';
 import 'package:wisely/features/expenses/domain/entites/Expanses.dart';
-import 'package:wisely/features/expenses/presentation/widgets/categoryChoise.dart';
 
+import '../../../categorise/domain/entitties/categoryy.dart';
+import '../../../categorise/domain/riverpod/CategoryProvider.dart';
 import '../../data/hive/ExpansesDb.dart';
 import 'package:intl/intl.dart';
 
@@ -15,11 +17,13 @@ class AddExpanse extends StatefulWidget {
 }
 
 class _AddExpanseState extends State<AddExpanse> {
+  bool choiced = false;
   late String title;
   late int amount;
+  Category? _category;
   late DateTime dateTime = DateTime.now();
   late TextEditingController date;
-  late Expanses? _destination;
+  Expanses? _destination;
 
   //controllers
   TextEditingController title_cntrl = TextEditingController();
@@ -36,6 +40,11 @@ class _AddExpanseState extends State<AddExpanse> {
       title_cntrl = TextEditingController(text: _destination!.title);
       amount_cntrl =
           TextEditingController(text: _destination!.amount.toString());
+      if (_destination!.category != null) {
+        category_cntrl =
+            TextEditingController(text: _destination!.category!.title);
+      }
+
       date = TextEditingController(
           text: DateFormat("dd-MM-yyyy").format(_destination!.date));
     } else {
@@ -47,9 +56,15 @@ class _AddExpanseState extends State<AddExpanse> {
   void verification(WidgetRef ref) async {
     if (_formKey.currentState!.validate()) {
       final expansesDb = ExpansesDbImpl();
-
+      final CategoryDb categoryDb = CategoryDbImpl();
       _formKey.currentState!.save();
-      Expanses e = Expanses(title: title, amount: amount, date: dateTime);
+
+      Expanses e = Expanses(
+          title: title, amount: amount, date: dateTime, category: _category);
+      /*    if (_category != null) {
+        e.category!.amount = e.category!.amount + e.amount;
+        //  categoryDb.addCategoryDb(ref, _category!);
+      }*/
       bool status;
       if (_destination == null) {
         status = await expansesDb.addExpanseDb(ref, e).then((value) {
@@ -57,8 +72,11 @@ class _AddExpanseState extends State<AddExpanse> {
           return true;
         });
       } else {
-        status =
-            await expansesDb.editExpenses(ref, e, _destination!).then((value) {
+        status = await expansesDb
+            .editExpenses(ref, e,
+                _destination!) //e.amount = 15 and e.category.amount = 200
+            .then((value) async {
+          // dest.amount = 20 and dest.category.amount = 205
           Navigator.pop(context);
           return true;
         });
@@ -157,7 +175,56 @@ class _AddExpanseState extends State<AddExpanse> {
           ),
           SizedBox(
               width: MediaQuery.of(context).size.width * 0.7,
-              child: CategoryField()),
+              child: Consumer(
+                builder: (context, ref, child) {
+                  List<Category> categories = ref.read(categoryProvider);
+                  List<String> suggestions = [
+                    for (final cat in categories) cat.title
+                  ];
+                  print("this is the list of suggestions $suggestions");
+                  return Autocomplete(
+                    fieldViewBuilder:
+                        (context, categoryCntrl, focusNode, onFieldSubmitted) =>
+                            TextFormField(
+                      onSaved: (newValue) {
+                        if (newValue != null && newValue.isNotEmpty) {
+                          for (var cat in categories) {
+                            if (cat.title == newValue) {
+                              //  cat.amount = cat.amount + amount;
+                              _category = cat;
+
+                              return;
+                            }
+                          }
+                          CategoryDb categoryDb = CategoryDbImpl();
+                          Category newCat = Category(title: newValue);
+                          //   newCat.amount = amount.toDouble();
+                          categoryDb.addCategoryDb(ref, newCat);
+                          _category = newCat;
+                        }
+                      },
+                      controller: category_cntrl,
+                      focusNode: focusNode,
+                      decoration: InputDecoration(hintText: "category"),
+                    ),
+                    optionsBuilder: (TextEditingValue textEditingValue) {
+                      if (textEditingValue.text == '') {
+                        return const Iterable<String>.empty();
+                      } else {
+                        List<String> matches = <String>[];
+                        matches.addAll(suggestions);
+
+                        matches.retainWhere((s) {
+                          return s
+                              .toLowerCase()
+                              .contains(textEditingValue.text.toLowerCase());
+                        });
+                        return matches;
+                      }
+                    },
+                  );
+                },
+              )),
           SizedBox(
               height: 100,
               child: Center(

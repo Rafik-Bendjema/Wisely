@@ -15,6 +15,13 @@ class ExpansesNotifier extends StateNotifier<List<Expanses>> {
     state = [...state, e];
   }
 
+  void edit(Expanses newE) {
+    state = [
+      for (final expense in state)
+        if (expense == newE) newE else expense,
+    ];
+  }
+
   void delete(String id) {
     state = [
       for (final expense in state)

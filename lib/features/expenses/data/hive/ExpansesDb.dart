@@ -1,6 +1,6 @@
-import 'package:flutter/widgets.dart';
 import 'package:hive/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wisely/features/categorise/data/hive/CategoryDb.dart';
 import 'package:wisely/features/expenses/domain/entites/Expanses.dart';
 import 'package:wisely/features/expenses/domain/riverpod/ExpensesProvider.dart';
 
@@ -13,6 +13,7 @@ abstract class ExpansesDb {
 }
 
 class ExpansesDbImpl implements ExpansesDb {
+  final CategoryDb categoryDb = CategoryDbImpl();
   @override
   Future<Box<Expanses>?> openBox() async {
     try {
@@ -42,6 +43,7 @@ class ExpansesDbImpl implements ExpansesDb {
     try {
       await b.put(e.id, e);
       ref.read(expensesProvider2.notifier).add(e);
+      await categoryDb.editCategoryValue(ref, e.category!, e.amount);
     } catch (e) {
       print("error while adding to the box ${e.toString()}");
       return false;
@@ -51,13 +53,35 @@ class ExpansesDbImpl implements ExpansesDb {
 
   @override
   Future<bool> editExpenses(WidgetRef ref, Expanses newE, Expanses oldE) async {
-    //delete the previous object
-    bool state = await deleteExpanseDb(ref, oldE);
-    //add a new one
-    if (state) {
-      addExpanseDb(ref, newE);
+    Box<Expanses> b = await Hive.openBox<Expanses>("Expanses");
+    // we have 3 cases about categorise
+    //1 - no category -> to category DONE
+    //2 - category -> no category  Done
+    //3 - change the category DONE
+    //4 - edit the same category DONE
+    if (oldE.category == null) {
+      if (newE.category != null) {
+        await categoryDb.editCategoryValue(ref, newE.category!, newE.amount);
+      }
     } else {
-      print("error in adding expanse");
+      if (newE.category != null) {
+        if (newE.category == oldE.category) {
+          await categoryDb.editCategoryValue(
+              ref, newE.category!, newE.amount - oldE.amount);
+        } else {
+          await categoryDb.editCategoryValue(ref, oldE.category!, -oldE.amount);
+          await categoryDb.editCategoryValue(ref, newE.category!, newE.amount);
+        }
+      } else {
+        await categoryDb.editCategoryValue(ref, oldE.category!, -oldE.amount);
+      }
+    }
+
+    try {
+      b.put(oldE.id, newE);
+      ref.read(expensesProvider2.notifier).edit(newE);
+    } on Exception catch (e) {
+      print("error in editing an exapnse error : $e");
       return false;
     }
     return true;

@@ -1,3 +1,4 @@
+import 'package:wisely/features/categorise/data/hive/CategoryDb.dart';
 import 'package:wisely/features/categorise/domain/entitties/categoryy.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
@@ -24,5 +25,9 @@ class Expanses {
       this.category,
       required this.date}) {
     id = uuid.v1();
+  }
+  @override
+  bool operator ==(other) {
+    return (other is Expanses) && (other.id == id);
   }
 }
