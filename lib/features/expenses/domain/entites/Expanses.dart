@@ -1,7 +1,6 @@
-import 'package:wisely/features/categorise/data/hive/CategoryDb.dart';
-import 'package:wisely/features/categorise/domain/entitties/categoryy.dart';
 import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
+import 'package:wisely/features/categorise/domain/entities/category.dart';
 
 part 'Expanses.g.dart';
 

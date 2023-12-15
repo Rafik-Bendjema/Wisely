@@ -1,18 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:wisely/core/resources/colors.dart';
+import 'package:wisely/features/Source/domain/entities/Source.dart';
 
-class Bcateg_card extends StatefulWidget {
-  const Bcateg_card({super.key});
+class SourceCard extends StatefulWidget {
+  final Source source;
+  const SourceCard({super.key, required this.source});
 
   @override
-  State<Bcateg_card> createState() => _Bcateg_cardState();
+  State<SourceCard> createState() => _SourceCardState();
 }
 
-class _Bcateg_cardState extends State<Bcateg_card> {
+class _SourceCardState extends State<SourceCard> {
+  late Source _source;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _source = widget.source;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(10))),
       padding: EdgeInsets.all(15),
@@ -24,7 +34,7 @@ class _Bcateg_cardState extends State<Bcateg_card> {
           Align(
             alignment: Alignment.topLeft,
             child: Text(
-              "global",
+              _source.title,
               style: TextStyle(fontSize: 37, color: primary_color),
             ),
           ),
@@ -33,7 +43,7 @@ class _Bcateg_cardState extends State<Bcateg_card> {
             child: RichText(
               text: TextSpan(children: <TextSpan>[
                 TextSpan(
-                    text: "1491",
+                    text: _source.amount.toString(),
                     style: TextStyle(fontSize: 40, color: tertiary_color)),
                 TextSpan(
                     text: ".00",

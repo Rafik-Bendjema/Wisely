@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wisely/core/Dialogs/LongPressDialog.dart';
+import 'package:wisely/features/expenses/domain/entites/Expanses.dart';
 import 'package:wisely/features/expenses/domain/riverpod/ExpensesProvider.dart';
 import 'package:wisely/features/expenses/presentation/widgets/dividers.dart';
 
-import '../../../../core/Dialogs/DeletingDialog.dart';
 import 'ExpenseTile.dart';
 
 class ExpansesList extends ConsumerWidget {
@@ -11,6 +13,7 @@ class ExpansesList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    print("the length of the box is ${Hive.box<Expanses>("Expanses").length}");
     int date = 0;
     final expenses = ref.watch(expensesProvider2);
     print("i ama");
@@ -22,7 +25,7 @@ class ExpansesList extends ConsumerWidget {
         itemCount: expenses.length,
         itemBuilder: (context, index) {
           print(
-              "this is the diffrence ${DateTime.now().difference(expenses[index].date).inDays}");
+              "${expenses[index].title} ==> ${expenses[index].id} HASH CODE : ${expenses[index].hashCode}");
           if (DateTime.now().difference(expenses[index].date).inDays < 1) {
             if (date != 1) {
               date = 1;
@@ -36,8 +39,9 @@ class ExpansesList extends ConsumerWidget {
                     onLongPress: () {
                       showDialog(
                           context: context,
-                          builder: (context) =>
-                              deletingDialog(ref, expenses[index], context));
+                          builder: (context) => Dialog(
+                              child: LongPressDialog(
+                                  ref, expenses[index], context)));
                     },
                     child: expenseTile(
                         context, expenses[index].title, expenses[index].amount),
@@ -62,8 +66,9 @@ class ExpansesList extends ConsumerWidget {
                     onLongPress: () {
                       showDialog(
                           context: context,
-                          builder: (context) =>
-                              deletingDialog(ref, expenses[index], context));
+                          builder: (context) => Dialog(
+                              child: LongPressDialog(
+                                  ref, expenses[index], context)));
                     },
                     child: expenseTile(
                         context, expenses[index].title, expenses[index].amount),
@@ -87,8 +92,9 @@ class ExpansesList extends ConsumerWidget {
                     onLongPress: () {
                       showDialog(
                           context: context,
-                          builder: (context) =>
-                              deletingDialog(ref, expenses[index], context));
+                          builder: (context) => Dialog(
+                              child: LongPressDialog(
+                                  ref, expenses[index], context)));
                     },
                     child: expenseTile(
                         context, expenses[index].title, expenses[index].amount),
@@ -106,8 +112,9 @@ class ExpansesList extends ConsumerWidget {
                 onLongPress: () {
                   showDialog(
                       context: context,
-                      builder: (context) =>
-                          deletingDialog(ref, expenses[index], context));
+                      builder: (context) => Dialog(
+                          child:
+                              LongPressDialog(ref, expenses[index], context)));
                 },
                 child: expenseTile(
                     context, expenses[index].title, expenses[index].amount),

@@ -4,12 +4,9 @@ import 'package:wisely/core/resources/colors.dart';
 class CategoryCard extends StatefulWidget {
   final String title;
   final double amount;
-  final IconData? icon;
+  final int? icon;
   CategoryCard(
-      {super.key,
-      required this.title,
-      required this.amount,
-      required this.icon});
+      {super.key, required this.title, required this.amount, this.icon});
 
   @override
   State<CategoryCard> createState() => _CategoryCardState();
@@ -17,13 +14,14 @@ class CategoryCard extends StatefulWidget {
 
 class _CategoryCardState extends State<CategoryCard> {
   late String title = widget.title;
-  late IconData? icon = widget.icon;
+  late int? icon = widget.icon;
   late double amount = widget.amount;
 
   @override
   Widget build(BuildContext context) {
+    print("this is the icon data ${icon!}");
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       height: 70,
       width: MediaQuery.of(context).size.width * 0.85,
       decoration: BoxDecoration(
@@ -62,7 +60,7 @@ class _CategoryCardState extends State<CategoryCard> {
             width: 7,
           ),
           Icon(
-            icon,
+            icon != null ? IconData(icon!, fontFamily: "MaterialIcons") : null,
             color: Colors.white,
             size: 50,
           )

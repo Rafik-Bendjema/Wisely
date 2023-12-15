@@ -2,9 +2,9 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wisely/core/home/presentation/home_view.dart';
-import 'package:wisely/features/categorise/data/hive/CategoryDb.dart';
-import 'package:wisely/features/incomes/data/hive/IncomeDb.dart';
-import '../../../features/expenses/data/hive/ExpansesDb.dart';
+import 'package:wisely/features/Source/domain/riverpod/SourceProvider.dart';
+import 'package:wisely/features/categorise/domain/riverpod/CategoryProvider.dart';
+import 'package:wisely/features/expenses/domain/riverpod/ExpensesProvider.dart';
 import 'clipper.dart';
 
 class Splash extends StatefulWidget {
@@ -54,12 +54,9 @@ class _SplashState extends State<Splash> {
             children: [
               Consumer(builder: (context, ref, widget) {
                 if (_opacity == 1) {
-                  ExpansesDb expansesDb = ExpansesDbImpl();
-                  IncomeDb incomeDb = IncomeDbImpl();
-                  CategoryDb categoryDb = CategoryDbImpl();
-                  expansesDb.getAllExpenses(ref);
-                  incomeDb.getAllIncomes(ref);
-                  categoryDb.getAllCategories(ref);
+                  ref.read(expensesProvider2.notifier).reloadData();
+                  ref.read(categoryProvider.notifier).reloadData();
+                  ref.read(sourceProvider.notifier).reloadData();
                 }
 
                 return SizedBox(

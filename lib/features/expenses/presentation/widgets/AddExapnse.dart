@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wisely/features/categorise/data/hive/CategoryDb.dart';
+import 'package:wisely/features/categorise/domain/entities/category.dart';
 import 'package:wisely/features/expenses/domain/entites/Expanses.dart';
 
-import '../../../categorise/domain/entitties/categoryy.dart';
 import '../../../categorise/domain/riverpod/CategoryProvider.dart';
 import '../../data/hive/ExpansesDb.dart';
 import 'package:intl/intl.dart';
@@ -183,6 +183,9 @@ class _AddExpanseState extends State<AddExpanse> {
                   ];
                   print("this is the list of suggestions $suggestions");
                   return Autocomplete(
+                    onSelected: (selected) {
+                      print("this is the selected string ${selected}");
+                    },
                     fieldViewBuilder:
                         (context, categoryCntrl, focusNode, onFieldSubmitted) =>
                             TextFormField(
@@ -211,6 +214,7 @@ class _AddExpanseState extends State<AddExpanse> {
                       if (textEditingValue.text == '') {
                         return const Iterable<String>.empty();
                       } else {
+                        print("this is list of matchs");
                         List<String> matches = <String>[];
                         matches.addAll(suggestions);
 

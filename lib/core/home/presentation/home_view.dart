@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:wisely/core/resources/colors.dart';
-import 'package:wisely/features/budget_categ/presentation/widgets/Bcateg_Card.dart';
+import 'package:wisely/features/Source/presentation/widgets/SourcesList.dart';
 import 'package:wisely/features/categorise/presentation/widgets/AddCategory.dart';
-import 'package:wisely/features/categorise/presentation/widgets/CategoryCard.dart';
 import 'package:wisely/features/categorise/presentation/widgets/CategoryList.dart';
 import 'package:wisely/features/expenses/presentation/pages/ExpensesView.dart';
 import 'package:wisely/features/expenses/presentation/widgets/Cart_view.dart';
-import 'package:wisely/features/incomes/presentation/pages/IncomesView.dart';
 import 'package:wisely/features/stats/presentation/widgets/GoalBar.dart';
 
 class HomeView extends StatefulWidget {
@@ -22,6 +19,7 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
@@ -31,24 +29,18 @@ class _HomeViewState extends State<HomeView> {
               padding: EdgeInsets.all(10),
               child: Column(
                 children: [
-                  SizedBox(
-                    height: 160,
-                    width: MediaQuery.of(context).size.width,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        for (int i = 0; i < 3; i++)
-                          Row(
-                            children: [
-                              Bcateg_card(),
-                              SizedBox(
-                                width: 20,
-                              )
-                            ],
-                          )
-                      ],
-                    ),
-                  ),
+                        Text(
+                          "Sources",
+                          style: TextStyle(
+                            fontSize: 25,
+                          ),
+                        ),
+                        ElevatedButton(onPressed: () {}, child: Text("ADD"))
+                      ]),
+                  SourcesList(),
                   SizedBox(
                     height: 20,
                   ),
@@ -81,12 +73,7 @@ class _HomeViewState extends State<HomeView> {
                               height: 30,
                             ),
                             ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => IncomeView()));
-                              },
+                              onPressed: () {},
                               style: ButtonStyle(
                                   splashFactory: NoSplash.splashFactory,
                                   shadowColor: MaterialStateColor.resolveWith(
@@ -122,8 +109,9 @@ class _HomeViewState extends State<HomeView> {
                             onPressed: () {
                               showDialog(
                                   context: context,
-                                  builder: (context) =>
-                                      Dialog(child: AddCategory()));
+                                  builder: (context) => Dialog(
+                                        child: AddCategory(),
+                                      ));
                             },
                             child: Text(
                               "ADD +",

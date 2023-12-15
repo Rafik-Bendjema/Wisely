@@ -9,6 +9,7 @@ abstract class ExpansesDb {
   Future<bool> addExpanseDb(WidgetRef ref, Expanses e);
   Future<bool> deleteExpanseDb(WidgetRef ref, Expanses e);
   Future<void> getAllExpenses(WidgetRef ref);
+  Future<List<Expanses>> getExpenses();
   Future<bool> editExpenses(WidgetRef ref, Expanses newE, Expanses oldE);
 }
 
@@ -29,12 +30,6 @@ class ExpansesDbImpl implements ExpansesDb {
   Future<void> getAllExpenses(WidgetRef ref) async {
     var b = await Hive.openBox<Expanses>("Expanses");
     print("i am here and this is the elements ${b.values.length.toString()}");
-
-    for (var i = 0; i < b.length; i++) {
-      print("hey");
-      Expanses e = b.getAt(i) as Expanses;
-      ref.read(expensesProvider2.notifier).add(e);
-    }
   }
 
   @override
@@ -42,8 +37,8 @@ class ExpansesDbImpl implements ExpansesDb {
     Box<Expanses> b = await Hive.openBox<Expanses>("Expanses");
     try {
       await b.put(e.id, e);
-      ref.read(expensesProvider2.notifier).add(e);
-      await categoryDb.editCategoryValue(ref, e.category!, e.amount);
+      ref.read(expensesProvider2.notifier).reloadData();
+      await categoryDb.editCategoryValue(ref, e.category!, e.amount.toDouble());
     } catch (e) {
       print("error while adding to the box ${e.toString()}");
       return false;
@@ -54,32 +49,17 @@ class ExpansesDbImpl implements ExpansesDb {
   @override
   Future<bool> editExpenses(WidgetRef ref, Expanses newE, Expanses oldE) async {
     Box<Expanses> b = await Hive.openBox<Expanses>("Expanses");
-    // we have 3 cases about categorise
+    // we have 4 cases about categorise
     //1 - no category -> to category DONE
     //2 - category -> no category  Done
     //3 - change the category DONE
     //4 - edit the same category DONE
-    if (oldE.category == null) {
-      if (newE.category != null) {
-        await categoryDb.editCategoryValue(ref, newE.category!, newE.amount);
-      }
-    } else {
-      if (newE.category != null) {
-        if (newE.category == oldE.category) {
-          await categoryDb.editCategoryValue(
-              ref, newE.category!, newE.amount - oldE.amount);
-        } else {
-          await categoryDb.editCategoryValue(ref, oldE.category!, -oldE.amount);
-          await categoryDb.editCategoryValue(ref, newE.category!, newE.amount);
-        }
-      } else {
-        await categoryDb.editCategoryValue(ref, oldE.category!, -oldE.amount);
-      }
-    }
+    await categoryDb.CategoryChangemnt(oldE.category, newE.category, ref);
 
     try {
-      b.put(oldE.id, newE);
-      ref.read(expensesProvider2.notifier).edit(newE);
+      await b.delete(oldE.id);
+      await b.put(newE.id, newE);
+      ref.read(expensesProvider2.notifier).reloadData();
     } on Exception catch (e) {
       print("error in editing an exapnse error : $e");
       return false;
@@ -89,13 +69,32 @@ class ExpansesDbImpl implements ExpansesDb {
 
   @override
   Future<bool> deleteExpanseDb(WidgetRef ref, Expanses e) async {
+    print("deleting the id ${e.id}");
     try {
-      await Hive.box<Expanses>("Expanses").delete(e.id);
-      ref.read(expensesProvider2.notifier).delete(e.id);
+      Box<Expanses>? b = await openBox();
+      if (b == null) {
+        print("erro in deleting ${e.toString()}");
+        return false;
+      }
+      if (e.category != null) {
+        await categoryDb.editCategoryValue(
+            ref, e.category!, -e.amount.toDouble());
+      }
+      await b.delete(e.id);
+      ref.read(expensesProvider2.notifier).reloadData();
     } catch (e) {
-      print("erro in deleting ${e.toString()}");
       return false;
     }
     return true;
+  }
+
+  @override
+  Future<List<Expanses>> getExpenses() async {
+    Box<Expanses>? b = await openBox();
+    if (b == null) {
+      print("error opening the expenses box ");
+      return [];
+    }
+    return b.values.toList();
   }
 }
