@@ -1,7 +1,7 @@
 import 'package:wisely/features/expenses/domain/entites/Expanses.dart';
 
 import '../../domain/repository/ExpansesRepository.dart';
-import '../hive/ExpansesDb.dart';
+import '../sql/ExpansesDb.dart';
 
 class ExpansesRepositoryImpl implements ExpansesRepository {
   final ExpansesDb expansesDb;

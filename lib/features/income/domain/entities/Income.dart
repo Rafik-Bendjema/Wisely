@@ -1,20 +1,43 @@
-import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 
-part 'Income.g.dart';
-
-@HiveType(typeId: 3)
 class Income {
-  Uuid uuid = Uuid();
-  @HiveField(0)
+  Uuid uuid = const Uuid();
+
   late String id;
-  @HiveField(1)
   final String title;
-  @HiveField(2)
-  final double amount;
-  @HiveField(3)
+  final int amount;
   final DateTime date;
-  Income({required this.title, required this.amount, required this.date}) {
+
+  Income({
+    required this.title,
+    required this.amount,
+    required this.date,
+  }) {
     id = uuid.v1();
   }
+
+  Income.withId({
+    required this.id,
+    required this.title,
+    required this.amount,
+    required this.date,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'amount': amount,
+      'date': date.toString(),
+    };
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is Income && runtimeType == other.runtimeType && id == other.id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
 }

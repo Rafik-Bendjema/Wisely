@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wisely/core/home/presentation/home_view.dart';
 import 'package:wisely/features/Source/domain/riverpod/SourceProvider.dart';
 import 'package:wisely/features/categorise/domain/riverpod/CategoryProvider.dart';
-import 'package:wisely/features/expenses/domain/riverpod/ExpensesProvider.dart';
+import '../../../features/expenses/domain/riverpod/ExpensesProvider.dart';
 import 'clipper.dart';
 
 class Splash extends StatefulWidget {
@@ -24,13 +24,13 @@ class _SplashState extends State<Splash> {
   }
 
   void fading() async {
-    Future.delayed(Duration(seconds: 1)).then((value) {
+    Future.delayed(const Duration(seconds: 1)).then((value) {
       setState(() {
         _opacity = 1;
       });
-      Future.delayed(Duration(seconds: 4)).then((value) => {
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => HomeView()))
+      Future.delayed(const Duration(seconds: 4)).then((value) => {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const HomeView()))
           });
     });
   }
@@ -45,7 +45,7 @@ class _SplashState extends State<Splash> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(color: Color(0xFFE3FFFA)),
+        decoration: const BoxDecoration(color: Color(0xFFE3FFFA)),
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         child: Center(
@@ -54,21 +54,22 @@ class _SplashState extends State<Splash> {
             children: [
               Consumer(builder: (context, ref, widget) {
                 if (_opacity == 1) {
+                  //fetch data
                   ref.read(expensesProvider2.notifier).reloadData();
                   ref.read(categoryProvider.notifier).reloadData();
                   ref.read(sourceProvider.notifier).reloadData();
                 }
 
-                return SizedBox(
+                return const SizedBox(
                   height: 0,
                 );
               }),
               AnimatedOpacity(
-                duration: Duration(seconds: 3),
+                duration: const Duration(seconds: 3),
                 opacity: _opacity,
                 child: ClipOval(
                   child: Container(
-                    decoration: BoxDecoration(color: Color(0XFFA7E8BD)),
+                    decoration: const BoxDecoration(color: Color(0XFFA7E8BD)),
                     child: CustomPaint(
                       size: Size(
                           200,
@@ -79,21 +80,21 @@ class _SplashState extends State<Splash> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 50,
               ),
               DefaultTextStyle(
-                style: TextStyle(
+                style: const TextStyle(
                     fontSize: 40,
                     fontWeight: FontWeight.bold,
-                    color: const Color.fromARGB(255, 55, 55, 55)),
+                    color: Color.fromARGB(255, 55, 55, 55)),
                 child: AnimatedTextKit(
                   repeatForever: false,
                   isRepeatingAnimation: false,
                   animatedTexts: [
                     TyperAnimatedText(
                       "wisely",
-                      speed: Duration(milliseconds: 200),
+                      speed: const Duration(milliseconds: 200),
                     )
                   ],
                 ),

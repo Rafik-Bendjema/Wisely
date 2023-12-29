@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:wisely/features/categorise/data/hive/CategoryDb.dart';
+import 'package:wisely/features/categorise/data/sqlite/CategoryDb.dart';
 import 'package:wisely/features/categorise/domain/entities/category.dart';
 
 class AddCategory extends StatefulWidget {
@@ -12,9 +12,9 @@ class AddCategory extends StatefulWidget {
 }
 
 class _AddCategoryState extends State<AddCategory> {
-  CategoryDb _categoryDb = CategoryDbImpl();
+  final CategoryDb _categoryDb = CategoryDb_impl();
   late String title;
-  Icon? _pickedIcon = null;
+  Icon? _pickedIcon;
 
   final _globalKey = GlobalKey<FormState>();
 
@@ -44,7 +44,7 @@ class _AddCategoryState extends State<AddCategory> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       width: MediaQuery.of(context).size.width * 0.9,
       child: Form(
         key: _globalKey,
@@ -59,11 +59,11 @@ class _AddCategoryState extends State<AddCategory> {
               }
               return null;
             },
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: "title",
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 30,
           ),
           Row(
@@ -71,13 +71,14 @@ class _AddCategoryState extends State<AddCategory> {
             children: [
               (_pickedIcon != null)
                   ? Row(
-                      children: [Text("picked icon is   "), _pickedIcon!],
+                      children: [const Text("picked icon is   "), _pickedIcon!],
                     )
-                  : Text("icon not selected"),
-              ElevatedButton(onPressed: _pickIcon, child: Text("pick icon"))
+                  : const Text("icon not selected"),
+              ElevatedButton(
+                  onPressed: _pickIcon, child: const Text("pick icon"))
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 30,
           ),
           Consumer(
@@ -85,7 +86,7 @@ class _AddCategoryState extends State<AddCategory> {
                   onPressed: () {
                     submit(ref);
                   },
-                  child: Text('Add')))
+                  child: const Text('Add')))
         ]),
       ),
     );

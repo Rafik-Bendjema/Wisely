@@ -1,25 +1,27 @@
-import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 
-part 'category.g.dart';
-
-@HiveType(typeId: 1)
 class Category {
-  Uuid uuid = Uuid();
-  @HiveField(0)
+  Uuid uuid = const Uuid();
   late String id;
-  @HiveField(1)
   String title;
-  @HiveField(2)
-  double amount = 0;
-  @HiveField(3)
+  int amount = 0;
   int? icon;
   Category({this.icon, required this.title}) {
     id = uuid.v1();
   }
 
-  @override
-  bool operator ==(other) {
-    return (other is Category) && (other.id == id);
+  factory Category.fromMap(Map<String, dynamic> map) {
+    return Category.withId(
+      id: map['id'],
+      title: map['title'],
+      amount: map['amount'],
+      icon: map['icon'],
+    );
+  }
+
+  Category.withId(
+      {required this.id, required this.title, required this.amount, this.icon});
+  Map<String, dynamic> toMap() {
+    return {'id': id, 'title': title, 'amount': amount, 'icon': icon};
   }
 }

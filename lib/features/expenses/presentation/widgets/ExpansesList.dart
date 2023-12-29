@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wisely/core/Dialogs/LongPressDialog.dart';
 import 'package:wisely/features/expenses/domain/entites/Expanses.dart';
@@ -13,7 +12,6 @@ class ExpansesList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    print("the length of the box is ${Hive.box<Expanses>("Expanses").length}");
     int date = 0;
     final expenses = ref.watch(expensesProvider2);
     print("i ama");
@@ -32,7 +30,7 @@ class ExpansesList extends ConsumerWidget {
               return Column(
                 children: [
                   dividers("today"),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   GestureDetector(
@@ -46,7 +44,7 @@ class ExpansesList extends ConsumerWidget {
                     child: expenseTile(
                         context, expenses[index].title, expenses[index].amount),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   )
                 ],
@@ -59,7 +57,7 @@ class ExpansesList extends ConsumerWidget {
               return Column(
                 children: [
                   dividers("yestrday"),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   GestureDetector(
@@ -73,7 +71,7 @@ class ExpansesList extends ConsumerWidget {
                     child: expenseTile(
                         context, expenses[index].title, expenses[index].amount),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   )
                 ],
@@ -85,7 +83,7 @@ class ExpansesList extends ConsumerWidget {
               return Column(
                 children: [
                   dividers("before yestrday"),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   GestureDetector(
@@ -99,7 +97,7 @@ class ExpansesList extends ConsumerWidget {
                     child: expenseTile(
                         context, expenses[index].title, expenses[index].amount),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   )
                 ],
@@ -119,7 +117,7 @@ class ExpansesList extends ConsumerWidget {
                 child: expenseTile(
                     context, expenses[index].title, expenses[index].amount),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               )
             ],

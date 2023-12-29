@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:wisely/features/categorise/data/hive/CategoryDb.dart';
+import 'package:wisely/features/categorise/data/sqlite/CategoryDb.dart';
 import 'package:wisely/features/categorise/domain/entities/category.dart';
 import 'package:wisely/features/expenses/domain/entites/Expanses.dart';
 
 import '../../../categorise/domain/riverpod/CategoryProvider.dart';
-import '../../data/hive/ExpansesDb.dart';
+import '../../data/sql/ExpansesDb.dart';
 import 'package:intl/intl.dart';
 
 class AddExpanse extends StatefulWidget {
   final Expanses? e;
-  AddExpanse({super.key, this.e});
+  const AddExpanse({super.key, this.e});
 
   @override
   State<AddExpanse> createState() => _AddExpanseState();
@@ -55,8 +55,8 @@ class _AddExpanseState extends State<AddExpanse> {
 
   void verification(WidgetRef ref) async {
     if (_formKey.currentState!.validate()) {
-      final expansesDb = ExpansesDbImpl();
-      final CategoryDb categoryDb = CategoryDbImpl();
+      final ExpansesDb expansesDb = ExpansesDb_impl();
+      final CategoryDb categoryDb = CategoryDb_impl();
       _formKey.currentState!.save();
 
       Expanses e = Expanses(
@@ -93,7 +93,7 @@ class _AddExpanseState extends State<AddExpanse> {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.9,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(20))),
       child: Form(
@@ -112,9 +112,9 @@ class _AddExpanseState extends State<AddExpanse> {
                   }
                   return null;
                 },
-                decoration: InputDecoration(hintText: "title"),
+                decoration: const InputDecoration(hintText: "title"),
               )),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           SizedBox(
@@ -135,9 +135,9 @@ class _AddExpanseState extends State<AddExpanse> {
                         }
                         return null;
                       },
-                      decoration: InputDecoration(hintText: "price"),
+                      decoration: const InputDecoration(hintText: "price"),
                     )),
-                Expanded(
+                const Expanded(
                     child: Align(
                         alignment: Alignment.bottomCenter, child: Text("Dzd")))
               ],
@@ -169,7 +169,7 @@ class _AddExpanseState extends State<AddExpanse> {
                         });
                       }
                     },
-                    child: Text("Pick a date"))
+                    child: const Text("Pick a date"))
               ],
             ),
           ),
@@ -184,7 +184,7 @@ class _AddExpanseState extends State<AddExpanse> {
                   print("this is the list of suggestions $suggestions");
                   return Autocomplete(
                     onSelected: (selected) {
-                      print("this is the selected string ${selected}");
+                      print("this is the selected string $selected");
                     },
                     fieldViewBuilder:
                         (context, categoryCntrl, focusNode, onFieldSubmitted) =>
@@ -199,7 +199,7 @@ class _AddExpanseState extends State<AddExpanse> {
                               return;
                             }
                           }
-                          CategoryDb categoryDb = CategoryDbImpl();
+                          CategoryDb categoryDb = CategoryDb_impl();
                           Category newCat = Category(title: newValue);
                           //   newCat.amount = amount.toDouble();
                           categoryDb.addCategoryDb(ref, newCat);
@@ -208,7 +208,7 @@ class _AddExpanseState extends State<AddExpanse> {
                       },
                       controller: category_cntrl,
                       focusNode: focusNode,
-                      decoration: InputDecoration(hintText: "category"),
+                      decoration: const InputDecoration(hintText: "category"),
                     ),
                     optionsBuilder: (TextEditingValue textEditingValue) {
                       if (textEditingValue.text == '') {
@@ -237,7 +237,9 @@ class _AddExpanseState extends State<AddExpanse> {
                     onPressed: () {
                       verification(ref);
                     },
-                    child: (_destination == null) ? Text("Add") : Text("edit")),
+                    child: (_destination == null)
+                        ? const Text("Add")
+                        : const Text("edit")),
               )))
         ]),
       ),

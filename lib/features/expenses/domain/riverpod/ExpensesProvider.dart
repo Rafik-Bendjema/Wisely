@@ -1,5 +1,5 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:wisely/features/expenses/data/hive/ExpansesDb.dart';
+import 'package:wisely/features/expenses/data/sql/ExpansesDb.dart';
 import 'package:wisely/features/expenses/domain/entites/Expanses.dart';
 
 final expensesProvider2 =
@@ -8,7 +8,7 @@ final expensesProvider2 =
 });
 
 class ExpansesNotifier extends StateNotifier<List<Expanses>> {
-  ExpansesDb categoryDb = ExpansesDbImpl();
+  ExpansesDb categoryDb = ExpansesDb_impl();
   ExpansesNotifier() : super([]);
 
   void reloadData() async {

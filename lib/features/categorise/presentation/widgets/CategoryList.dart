@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:wisely/core/Dialogs/LongPressDialog.dart';
+import 'package:wisely/core/database/DataBase.dart';
 import 'package:wisely/core/resources/colors.dart';
+import 'package:wisely/features/categorise/data/sqlite/CategoryDb.dart';
 import 'package:wisely/features/categorise/domain/entities/category.dart';
 import 'package:wisely/features/categorise/domain/riverpod/CategoryProvider.dart';
+import 'package:wisely/features/expenses/data/sql/ExpansesDb.dart';
 
 class CategoryList extends StatefulWidget {
   const CategoryList({super.key});
@@ -13,9 +17,15 @@ class CategoryList extends StatefulWidget {
 }
 
 class _CategoryListState extends State<CategoryList> {
+  CategoryDb categoryDb = CategoryDb_impl();
+  @override
+  initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
         width: MediaQuery.of(context).size.width * 0.9,
         child: Consumer(
           builder: (context, ref, widget) {
@@ -24,11 +34,12 @@ class _CategoryListState extends State<CategoryList> {
                 itemCount: categories.length,
                 itemBuilder: (context, index) {
                   Category currentCat = categories[index];
+
                   return Column(
                     children: [
                       GestureDetector(
                         onLongPress: () {
-                          print("the selected item is ${currentCat.title}");
+                          print("the selected item is ${currentCat.id}");
                           showDialog(
                               context: context,
                               builder: (context) => Dialog(
@@ -42,7 +53,7 @@ class _CategoryListState extends State<CategoryList> {
                           decoration: BoxDecoration(
                               color: primary_color,
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
+                                  const BorderRadius.all(Radius.circular(10))),
                           child: Row(
                             children: [
                               Expanded(
@@ -51,7 +62,7 @@ class _CategoryListState extends State<CategoryList> {
                                     alignment: Alignment.centerLeft,
                                     child: Text(
                                       currentCat.title,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Color(0xFFD3F9B5),
                                         fontSize: 30,
                                       ),
@@ -76,7 +87,7 @@ class _CategoryListState extends State<CategoryList> {
                                           fontSize: 20, color: text_color))
                                 ]),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 7,
                               ),
                               Icon(
@@ -91,7 +102,7 @@ class _CategoryListState extends State<CategoryList> {
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       )
                     ],

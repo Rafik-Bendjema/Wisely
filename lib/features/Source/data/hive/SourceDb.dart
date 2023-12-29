@@ -1,75 +1,71 @@
-import 'package:hive/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:wisely/features/Source/domain/entities/Source.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:wisely/features/Source/domain/riverpod/SourceProvider.dart';
+import 'package:wisely/features/categorise/domain/entities/category.dart';
+
+import '../../../../core/database/DataBase.dart';
+import '../../domain/entities/Source.dart';
 
 abstract class SourceDb {
-  Future<Box<Source>?> openBox();
-  Future<bool> deleteSource(WidgetRef ref, Source s);
-  Future<bool> addSource(WidgetRef ref, Source s);
-  Future<bool> editSource(WidgetRef ref, Source newS, Source oldS);
+  Future<bool> addSourceDb(WidgetRef ref, Source source);
+  Future<bool> deleteSourceDb(WidgetRef ref, Source source);
+  Future<bool> editSource(WidgetRef ref, Source newSource, Source oldSource);
   Future<List<Source>> getSources();
 }
 
 class SourceDbImpl implements SourceDb {
   @override
-  Future<Box<Source>?> openBox() async {
-    Box<Source>? b = await Hive.openBox('Sources');
-    return b;
-  }
-
-  @override
-  Future<bool> addSource(WidgetRef ref, Source s) async {
+  Future<bool> addSourceDb(WidgetRef ref, Source source) async {
     try {
-      Box<Source>? b = await openBox();
-      if (b == null) {
-        print("error in opening source box");
-        return false;
-      }
-      await b.put(s.id, s);
-      //provider shit
+      await DatabaseHelper.database!.insert('source', source.toMap(),
+          conflictAlgorithm: ConflictAlgorithm.replace);
       ref.read(sourceProvider.notifier).reloadData();
+      //to do the income provider
+      return true;
     } catch (e) {
-      print("error in adding a a source object ");
+      print("Error in adding a source. Error: ${e.toString()}");
       return false;
     }
-    return true;
   }
 
   @override
-  Future<bool> deleteSource(WidgetRef ref, Source s) async {
+  Future<bool> deleteSourceDb(WidgetRef ref, Source source) async {
     try {
-      Box<Source>? b = await openBox();
-      if (b == null) {
-        print("error in opening source box");
-        return false;
-      }
-      await b.delete(s.id);
-    } catch (e) {
-      print("error in deleting a source");
+      await DatabaseHelper.database!
+          .delete('source', where: "id = ?", whereArgs: [source.id]);
+      // Reload data for any provider that needs to react to source changes
+      // ref.read(sourcesProvider.notifier).reloadData();
+      return true;
+    } on Exception catch (e) {
+      print("Error in deleting source. Error: ${e.toString()}");
       return false;
     }
-    return true;
   }
 
   @override
-  Future<bool> editSource(WidgetRef ref, Source newS, Source oldS) {
-    // TODO: implement editSource
+  Future<bool> editSource(WidgetRef ref, Source newSource, Source oldSource) {
+    // TODO: Implement editSource
     throw UnimplementedError();
   }
 
   @override
   Future<List<Source>> getSources() async {
-    try {
-      Box<Source>? b = await openBox();
-      if (b == null) {
-        print("error in opening source box");
-        return [];
-      }
-      return b.values.toList();
-    } catch (e) {
-      print("error in fetching sources");
-      return [];
+    List<Source> sourcesList = [];
+    await DatabaseHelper.opendatabase();
+    List<Map<String, dynamic>> sourcesMap =
+        await DatabaseHelper.database!.query('source');
+
+    print("This is the sources $sourcesMap");
+    // Generate a list from the map
+    for (var element in sourcesMap) {
+      Source curr = Source.withId(
+        id: element['id'] as String,
+        title: element['title'] as String,
+        amount: element['amount'] as int,
+        color: element['color'] as int,
+      );
+      sourcesList.add(curr);
     }
+    return sourcesList;
   }
 }

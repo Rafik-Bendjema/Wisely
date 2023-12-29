@@ -22,10 +22,10 @@ class _SourceCardState extends State<SourceCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(10))),
-      padding: EdgeInsets.all(15),
+      decoration: BoxDecoration(
+          color: Color(_source.color),
+          borderRadius: const BorderRadius.all(Radius.circular(10))),
+      padding: const EdgeInsets.all(15),
       height: 150,
       width: 300,
       child: Column(

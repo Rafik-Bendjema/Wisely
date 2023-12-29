@@ -1,23 +1,14 @@
-import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wisely/features/categorise/domain/entities/category.dart';
 
-part 'Expanses.g.dart';
-
-@HiveType(typeId: 0)
 class Expanses {
-  Uuid uuid = Uuid();
-  @HiveField(0)
+  Uuid uuid = const Uuid();
   final String title;
-  @HiveField(1)
   final int amount;
-  @HiveField(2)
   final Category? category;
-  @HiveField(3)
   final DateTime date;
-  @HiveField(4)
   late String id;
-  @HiveField(5)
+
   Expanses(
       {required this.title,
       required this.amount,
@@ -25,6 +16,24 @@ class Expanses {
       required this.date}) {
     id = uuid.v1();
   }
+
+  Expanses.withId(
+      {required this.id,
+      required this.title,
+      required this.date,
+      this.category,
+      required this.amount});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'amount': amount,
+      'date_ex': date.toString(),
+      'category': category?.id
+    };
+  }
+
   @override
   bool operator ==(other) {
     return (other is Expanses) && (other.id == id);
