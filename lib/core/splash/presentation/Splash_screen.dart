@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wisely/core/home/presentation/home_view.dart';
 import 'package:wisely/features/Source/domain/riverpod/SourceProvider.dart';
 import 'package:wisely/features/categorise/domain/riverpod/CategoryProvider.dart';
+import 'package:wisely/features/income/domain/riverpod/IncomProvider.dart';
 import '../../../features/expenses/domain/riverpod/ExpensesProvider.dart';
 import 'clipper.dart';
 
@@ -58,6 +59,7 @@ class _SplashState extends State<Splash> {
                   ref.read(expensesProvider2.notifier).reloadData();
                   ref.read(categoryProvider.notifier).reloadData();
                   ref.read(sourceProvider.notifier).reloadData();
+                  ref.read(incomeProvider.notifier).reloadData();
                 }
 
                 return const SizedBox(

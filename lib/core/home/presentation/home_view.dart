@@ -8,6 +8,7 @@ import 'package:wisely/features/categorise/presentation/widgets/AddCategory.dart
 import 'package:wisely/features/categorise/presentation/widgets/CategoryList.dart';
 import 'package:wisely/features/expenses/presentation/pages/ExpensesView.dart';
 import 'package:wisely/features/expenses/presentation/widgets/Cart_view.dart';
+import 'package:wisely/features/income/presentation/pages/IncomeVIew.dart';
 import 'package:wisely/features/stats/presentation/widgets/GoalBar.dart';
 
 class HomeView extends StatefulWidget {
@@ -87,7 +88,13 @@ class _HomeViewState extends State<HomeView> {
                                 height: 30,
                               ),
                               ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const IncomeView()));
+                                },
                                 style: ButtonStyle(
                                     splashFactory: NoSplash.splashFactory,
                                     shadowColor: MaterialStateColor.resolveWith(

@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:wisely/core/Dialogs/LongPressDialog.dart';
-import 'package:wisely/features/expenses/domain/riverpod/ExpensesProvider.dart';
 import 'package:wisely/features/expenses/presentation/widgets/dividers.dart';
+import 'package:wisely/features/income/domain/riverpod/IncomProvider.dart';
 
-import 'ExpenseTile.dart';
+import '../../../../core/Dialogs/LongPressDialog.dart';
+import '../../../expenses/presentation/widgets/ExpenseTile.dart';
 
-class ExpansesList extends ConsumerWidget {
-  const ExpansesList({super.key});
+class IncomeList extends ConsumerWidget {
+  const IncomeList({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     int date = 0;
-    final expenses = ref.watch(expensesProvider2);
+    final incomes = ref.watch(incomeProvider);
     print("i ama");
-    print(expenses.length);
-    expenses.sort(((a, b) {
+    print(incomes.length);
+    incomes.sort(((a, b) {
       return b.date.compareTo(a.date);
     }));
     return ListView.builder(
-        itemCount: expenses.length,
+        itemCount: incomes.length,
         itemBuilder: (context, index) {
           print(
-              "${expenses[index].title} ==> ${expenses[index].id} HASH CODE : ${expenses[index].hashCode}");
-          if (DateTime.now().difference(expenses[index].date).inDays < 1) {
+              "${incomes[index].title} ==> ${incomes[index].id} HASH CODE : ${incomes[index].hashCode}");
+          if (DateTime.now().difference(incomes[index].date).inDays < 1) {
             if (date != 1) {
               date = 1;
               return Column(
@@ -38,10 +38,10 @@ class ExpansesList extends ConsumerWidget {
                           context: context,
                           builder: (context) => Dialog(
                               child: LongPressDialog(
-                                  ref, expenses[index], context)));
+                                  ref, incomes[index], context)));
                     },
                     child: expenseTile(
-                        context, expenses[index].title, expenses[index].amount),
+                        context, incomes[index].title, incomes[index].amount),
                   ),
                   const SizedBox(
                     height: 10,
@@ -49,7 +49,7 @@ class ExpansesList extends ConsumerWidget {
                 ],
               );
             }
-          } else if (DateTime.now().difference(expenses[index].date).inDays <
+          } else if (DateTime.now().difference(incomes[index].date).inDays <
               2) {
             if (date != 2) {
               date = 2;
@@ -65,10 +65,10 @@ class ExpansesList extends ConsumerWidget {
                           context: context,
                           builder: (context) => Dialog(
                               child: LongPressDialog(
-                                  ref, expenses[index], context)));
+                                  ref, incomes[index], context)));
                     },
                     child: expenseTile(
-                        context, expenses[index].title, expenses[index].amount),
+                        context, incomes[index].title, incomes[index].amount),
                   ),
                   const SizedBox(
                     height: 10,
@@ -91,10 +91,10 @@ class ExpansesList extends ConsumerWidget {
                           context: context,
                           builder: (context) => Dialog(
                               child: LongPressDialog(
-                                  ref, expenses[index], context)));
+                                  ref, incomes[index], context)));
                     },
                     child: expenseTile(
-                        context, expenses[index].title, expenses[index].amount),
+                        context, incomes[index].title, incomes[index].amount),
                   ),
                   const SizedBox(
                     height: 10,
@@ -111,10 +111,10 @@ class ExpansesList extends ConsumerWidget {
                       context: context,
                       builder: (context) => Dialog(
                           child:
-                              LongPressDialog(ref, expenses[index], context)));
+                              LongPressDialog(ref, incomes[index], context)));
                 },
                 child: expenseTile(
-                    context, expenses[index].title, expenses[index].amount),
+                    context, incomes[index].title, incomes[index].amount),
               ),
               const SizedBox(
                 height: 10,

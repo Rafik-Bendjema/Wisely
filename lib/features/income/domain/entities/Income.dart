@@ -1,5 +1,7 @@
 import 'package:uuid/uuid.dart';
 
+import '../../../Source/domain/entities/Source.dart';
+
 class Income {
   Uuid uuid = const Uuid();
 
@@ -7,11 +9,13 @@ class Income {
   final String title;
   final int amount;
   final DateTime date;
+  final Source? source;
 
   Income({
     required this.title,
     required this.amount,
     required this.date,
+    this.source,
   }) {
     id = uuid.v1();
   }
@@ -21,14 +25,18 @@ class Income {
     required this.title,
     required this.amount,
     required this.date,
+    required this.source,
   });
+
+  // Factory constructor to create Income from a ma
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'title': title,
       'amount': amount,
-      'date': date.toString(),
+      'date_inc': date.toString(),
+      'source': source?.id,
     };
   }
 

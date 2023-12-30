@@ -19,6 +19,16 @@ class Source {
     required this.color,
   });
 
+  // Factory constructor to create Source from a map
+  factory Source.fromMap(Map<String, dynamic> map) {
+    return Source.withId(
+      id: map['id'],
+      title: map['title'],
+      amount: map['amount'],
+      color: map['color'],
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,

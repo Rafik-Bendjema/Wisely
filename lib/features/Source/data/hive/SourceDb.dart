@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:wisely/features/Source/domain/riverpod/SourceProvider.dart';
@@ -11,6 +12,7 @@ abstract class SourceDb {
   Future<bool> deleteSourceDb(WidgetRef ref, Source source);
   Future<bool> editSource(WidgetRef ref, Source newSource, Source oldSource);
   Future<List<Source>> getSources();
+  Future<Source?> getSource(String? name, WidgetRef ref);
 }
 
 class SourceDbImpl implements SourceDb {
@@ -67,5 +69,21 @@ class SourceDbImpl implements SourceDb {
       sourcesList.add(curr);
     }
     return sourcesList;
+  }
+
+  @override
+  Future<Source?> getSource(String? name, WidgetRef ref) async {
+    if (name == null) {
+      return null;
+    }
+    List<Source> sources = ref.read(sourceProvider);
+    for (var source in sources) {
+      if (source.title.toLowerCase() == name.toLowerCase()) {
+        return source;
+      }
+    }
+    Source source = Source(amount: 0, title: name, color: Colors.white.value);
+    await addSourceDb(ref, source);
+    return null;
   }
 }
