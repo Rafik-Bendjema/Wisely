@@ -1,20 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:wisely/features/Source/data/hive/SourceDb.dart';
 import 'package:wisely/features/Source/domain/entities/Source.dart';
 
 class AddSource extends StatefulWidget {
-  const AddSource({super.key});
+  Source? destination;
+  AddSource({super.key, this.destination});
 
   @override
   State<AddSource> createState() => _AddSourceState();
 }
 
 class _AddSourceState extends State<AddSource> {
-  SourceDb sourceDb = SourceDbImpl();
+  Source? _destination;
 
-  Color _selected_color = Colors.transparent;
+  @override
+  void initState() {
+    _destination = widget.destination;
+    if (_destination != null) {
+      title_cntrl = TextEditingController(text: _destination!.title);
+      amount_cntrl =
+          TextEditingController(text: _destination!.amount.toString());
+    }
+    super.initState();
+  }
+
+  //controllers
+  TextEditingController title_cntrl = TextEditingController();
+
+  TextEditingController amount_cntrl = TextEditingController();
+
+  SourceDb sourceDb = SourceDbImpl();
 
   late String title;
   late int amount;
@@ -24,10 +40,14 @@ class _AddSourceState extends State<AddSource> {
   submit(WidgetRef ref) async {
     if (_globalKey.currentState!.validate()) {
       _globalKey.currentState!.save();
-      Source source =
-          Source(title: title, amount: amount, color: _selected_color.value);
-
-      bool result = await sourceDb.addSourceDb(ref, source);
+      bool result;
+      Source source = Source(title: title, amount: amount);
+      if (_destination == null) {
+        result = await sourceDb.addSourceDb(ref, source);
+      } else {
+        source.id = _destination!.id;
+        result = await sourceDb.editSource(ref, source);
+      }
 
       showDialog(
           context: context,
@@ -52,6 +72,7 @@ class _AddSourceState extends State<AddSource> {
         key: _globalKey,
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           TextFormField(
+            controller: title_cntrl,
             onSaved: (value) {
               title = value!;
             },
@@ -69,6 +90,7 @@ class _AddSourceState extends State<AddSource> {
             height: 30,
           ),
           TextFormField(
+            controller: amount_cntrl,
             onSaved: (value) {
               amount = int.parse(value!);
             },
@@ -86,31 +108,6 @@ class _AddSourceState extends State<AddSource> {
           const SizedBox(
             height: 30,
           ),
-          Row(
-            children: [
-              const Text("selected color is "),
-              Icon(
-                Icons.square,
-                color: _selected_color,
-              ),
-              Expanded(
-                  child: ElevatedButton(
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) => Dialog(
-                            child: ColorPicker(onColorChanged: (c) {
-                              print("selected color is ${c.value}");
-                              setState(() {
-                                _selected_color = c;
-                              });
-                            }),
-                          ));
-                },
-                child: const Text("PICK COLOR"),
-              ))
-            ],
-          ),
           const SizedBox(
             height: 30,
           ),
@@ -120,7 +117,9 @@ class _AddSourceState extends State<AddSource> {
                     submit(ref);
                     Navigator.pop(context);
                   },
-                  child: const Text('Add')))
+                  child: _destination == null
+                      ? const Text('Add')
+                      : const Text("Edit")))
         ]),
       ),
     );

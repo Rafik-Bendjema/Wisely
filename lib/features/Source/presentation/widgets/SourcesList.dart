@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wisely/core/Dialogs/LongPressDialog.dart';
 import 'package:wisely/core/resources/colors.dart';
 import 'package:wisely/features/Source/domain/entities/Source.dart';
 import 'package:wisely/features/Source/domain/riverpod/SourceProvider.dart';
@@ -38,10 +39,20 @@ class _SourcesListState extends State<SourcesList> {
               Source currentSource = sources[index];
               return Row(
                 children: [
-                  SourceCard(
-                    source: currentSource,
+                  GestureDetector(
+                    onLongPress: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) => Dialog(
+                              child: LongPressDialog(
+                                  ref, currentSource, context)));
+                    },
+                    child: SourceCard(
+                      key: ValueKey(currentSource.toMap()),
+                      source: currentSource,
+                    ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 20,
                   )
                 ],

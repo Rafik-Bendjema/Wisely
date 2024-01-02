@@ -23,6 +23,7 @@ dependencies:
   freezed_annotation:
   sqlite3_flutter_libs: ^0.4.2      
   flex_color_picker:
+  speech_to_text: ^6.5.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -30,10 +31,19 @@ dev_dependencies:
   hive_generator: 
   build_runner: 
   freezed:
-  json_serializable:        
+  json_serializable:    
+  shared_preferences:    
 
 
 flutter:
   uses-material-design: true
   assets:
     - assets/images/
+  
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset:  fonts/Poppins-Regular.ttf
+        - asset:  fonts/Poppins-Bold.ttf
+        - asset:  fonts/Poppins-ExtraBold.ttf
+        

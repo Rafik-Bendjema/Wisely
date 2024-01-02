@@ -1,6 +1,7 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wisely/core/database/DataBase.dart';
 import 'package:wisely/core/home/presentation/home_view.dart';
 import 'package:wisely/features/Source/domain/riverpod/SourceProvider.dart';
 import 'package:wisely/features/categorise/domain/riverpod/CategoryProvider.dart';
@@ -25,6 +26,7 @@ class _SplashState extends State<Splash> {
   }
 
   void fading() async {
+    await DatabaseHelper.opendatabase();
     Future.delayed(const Duration(seconds: 1)).then((value) {
       setState(() {
         _opacity = 1;
@@ -55,11 +57,13 @@ class _SplashState extends State<Splash> {
             children: [
               Consumer(builder: (context, ref, widget) {
                 if (_opacity == 1) {
+                  //open database
                   //fetch data
                   ref.read(expensesProvider2.notifier).reloadData();
                   ref.read(categoryProvider.notifier).reloadData();
                   ref.read(sourceProvider.notifier).reloadData();
                   ref.read(incomeProvider.notifier).reloadData();
+                  ref.read(expensesSum.notifier).reloadData();
                 }
 
                 return const SizedBox(
@@ -87,6 +91,7 @@ class _SplashState extends State<Splash> {
               ),
               DefaultTextStyle(
                 style: const TextStyle(
+                    fontFamily: 'Poppins',
                     fontSize: 40,
                     fontWeight: FontWeight.bold,
                     color: Color.fromARGB(255, 55, 55, 55)),

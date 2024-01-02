@@ -31,6 +31,8 @@ class _CategoryListState extends State<CategoryList> {
           builder: (context, ref, widget) {
             List<Category> categories = ref.watch(categoryProvider);
             return ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
                 itemCount: categories.length,
                 itemBuilder: (context, index) {
                   Category currentCat = categories[index];

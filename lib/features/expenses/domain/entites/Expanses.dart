@@ -1,4 +1,5 @@
 import 'package:uuid/uuid.dart';
+import 'package:wisely/features/Source/domain/entities/Source.dart';
 import 'package:wisely/features/categorise/domain/entities/category.dart';
 
 class Expanses {
@@ -8,9 +9,11 @@ class Expanses {
   final Category? category;
   final DateTime date;
   late String id;
+  final Source source;
 
   Expanses(
       {required this.title,
+      required this.source,
       required this.amount,
       this.category,
       required this.date}) {
@@ -22,7 +25,8 @@ class Expanses {
       required this.title,
       required this.date,
       this.category,
-      required this.amount});
+      required this.amount,
+      required this.source});
 
   Map<String, dynamic> toMap() {
     return {
@@ -30,8 +34,14 @@ class Expanses {
       'title': title,
       'amount': amount,
       'date_ex': date.toString(),
-      'category': category?.id
+      'category': category?.id,
+      'Source': source.id
     };
+  }
+
+  @override
+  String toString() {
+    return toMap().toString();
   }
 
   @override

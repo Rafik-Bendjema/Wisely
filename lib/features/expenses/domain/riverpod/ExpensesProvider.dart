@@ -13,23 +13,18 @@ class ExpansesNotifier extends StateNotifier<List<Expanses>> {
 
   void reloadData() async {
     state = await categoryDb.getExpenses();
+    print("this is the state ${state.length}");
   }
-/*
-  void add(Expanses e) {
-    state = [...state, e];
-  }
+}
 
-  void edit(Expanses newE) {
-    state = [
-      for (final expense in state)
-        if (expense == newE) newE else expense,
-    ];
-  }
+final expensesSum = StateNotifierProvider<expensesSumNotifier, double>((ref) {
+  return expensesSumNotifier();
+});
 
-  void delete(String id) {
-    state = [
-      for (final expense in state)
-        if (expense.id != id) expense,
-    ];
-  }*/
+class expensesSumNotifier extends StateNotifier<double> {
+  ExpansesDb expansesDb = ExpansesDb_impl();
+  expensesSumNotifier() : super(0);
+  void reloadData() async {
+    state = await expansesDb.getExpensesSum();
+  }
 }

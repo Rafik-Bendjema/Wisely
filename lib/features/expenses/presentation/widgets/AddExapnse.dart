@@ -4,6 +4,8 @@ import 'package:wisely/features/categorise/data/sqlite/CategoryDb.dart';
 import 'package:wisely/features/categorise/domain/entities/category.dart';
 import 'package:wisely/features/expenses/domain/entites/Expanses.dart';
 
+import '../../../Source/domain/entities/Source.dart';
+import '../../../Source/domain/riverpod/SourceProvider.dart';
 import '../../../categorise/domain/riverpod/CategoryProvider.dart';
 import '../../data/sql/ExpansesDb.dart';
 import 'package:intl/intl.dart';
@@ -20,6 +22,7 @@ class _AddExpanseState extends State<AddExpanse> {
   bool choiced = false;
   late String title;
   late int amount;
+  late Source finalSource;
   Category? _category;
   late DateTime dateTime = DateTime.now();
   late TextEditingController date;
@@ -60,7 +63,11 @@ class _AddExpanseState extends State<AddExpanse> {
       _formKey.currentState!.save();
 
       Expanses e = Expanses(
-          title: title, amount: amount, date: dateTime, category: _category);
+          title: title,
+          amount: amount,
+          date: dateTime,
+          category: _category,
+          source: finalSource);
       /*    if (_category != null) {
         e.category!.amount = e.category!.amount + e.amount;
         //  categoryDb.addCategoryDb(ref, _category!);
@@ -72,9 +79,13 @@ class _AddExpanseState extends State<AddExpanse> {
           return true;
         });
       } else {
+        e.id = _destination!.id;
+        print("i am adding and this is the informations ${e.toString()}");
         status = await expansesDb
-            .editExpenses(ref, e,
-                _destination!) //e.amount = 15 and e.category.amount = 200
+            .editExpenses(
+          ref,
+          e,
+        ) //e.amount = 15 and e.category.amount = 200
             .then((value) async {
           // dest.amount = 20 and dest.category.amount = 205
           Navigator.pop(context);
@@ -172,6 +183,25 @@ class _AddExpanseState extends State<AddExpanse> {
                     child: const Text("Pick a date"))
               ],
             ),
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.7,
+            child: Consumer(builder: (contenxt, ref, child) {
+              List<Source> suggestions = ref.watch(sourceProvider);
+              return DropdownButtonFormField(
+                  hint: const Text("source"),
+                  items: suggestions.map((Source s) {
+                    return DropdownMenuItem(
+                      value: s,
+                      child: Text(s.title),
+                    );
+                  }).toList(),
+                  onChanged: (cal) {
+                    if (cal != null) {
+                      finalSource = cal;
+                    }
+                  });
+            }),
           ),
           SizedBox(
               width: MediaQuery.of(context).size.width * 0.7,

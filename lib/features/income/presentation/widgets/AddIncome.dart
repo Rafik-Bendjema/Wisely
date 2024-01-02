@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:wisely/features/Source/data/hive/SourceDb.dart';
+import 'package:wisely/features/Source/domain/riverpod/SourceProvider.dart';
 import 'package:wisely/features/income/data/sqlite/IncomeDb.dart';
 import 'package:wisely/features/income/domain/entities/Income.dart';
 
@@ -16,6 +17,20 @@ class AddIncome extends StatefulWidget {
 }
 
 class _AddIncomeState extends State<AddIncome> {
+  @override
+  void initState() {
+    _destinitation = widget.destination;
+    if (_destinitation != null) {
+      title_controller = TextEditingController(text: _destinitation!.title);
+      amount_controller =
+          TextEditingController(text: _destinitation!.amount.toString());
+      date_controller =
+          TextEditingController(text: _destinitation!.date.toString());
+      finalSource = _destinitation!.source;
+    }
+    super.initState();
+  }
+
   SourceDb sourceDb = SourceDbImpl();
   IncomesDb incomesDb = IncomesDbImpl();
   final _formKey = GlobalKey<FormState>();
@@ -27,6 +42,8 @@ class _AddIncomeState extends State<AddIncome> {
   late String title;
   late int amount;
   late String date;
+
+  late Source finalSource;
   String? source;
   Income? _destinitation;
   DateTime dateTime = DateTime.now();
@@ -35,11 +52,16 @@ class _AddIncomeState extends State<AddIncome> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       //treat the source field
-      Source? finalSource = await sourceDb.getSource(source, ref);
-      print("this is the source inserted ${finalSource?.title}");
+
+      print("this is the source inserted ${finalSource.title}");
       Income income = Income(
           title: title, amount: amount, date: dateTime, source: finalSource);
-      await incomesDb.addIncomeDb(ref, income);
+      if (_destinitation != null) {
+        income.id = _destinitation!.id;
+        await incomesDb.editIncome(ref, income);
+      } else {
+        await incomesDb.addIncomeDb(ref, income);
+      }
     }
   }
 
@@ -113,8 +135,10 @@ class _AddIncomeState extends State<AddIncome> {
                       var choosedDate = await showDatePicker(
                           context: context,
                           initialDate: DateTime.now(),
-                          firstDate: DateTime.parse("2012-01-01"),
-                          lastDate: DateTime.now());
+                          firstDate: DateTime.now()
+                              .subtract(const Duration(days: 365)),
+                          lastDate:
+                              DateTime.now().add(const Duration(days: 365)));
                       if (choosedDate != null && choosedDate != dateTime) {
                         setState(() {
                           dateTime = choosedDate;
@@ -128,15 +152,23 @@ class _AddIncomeState extends State<AddIncome> {
             ),
           ),
           SizedBox(
-              width: MediaQuery.of(context).size.width * 0.7,
-              child: TextFormField(
-                onSaved: (val) {
-                  if (val != null && val.isNotEmpty) {
-                    source = val;
-                  }
-                },
-                decoration: const InputDecoration(hintText: "source"),
-              )),
+            width: MediaQuery.of(context).size.width * 0.7,
+            child: Consumer(builder: (contenxt, ref, child) {
+              List<Source> suggestions = ref.watch(sourceProvider);
+              return DropdownButtonFormField(
+                  items: suggestions.map((Source s) {
+                    return DropdownMenuItem(
+                      value: s,
+                      child: Text(s.title),
+                    );
+                  }).toList(),
+                  onChanged: (cal) {
+                    if (cal != null) {
+                      finalSource = cal;
+                    }
+                  });
+            }),
+          ),
           SizedBox(
               height: 100,
               child: Center(
@@ -144,6 +176,7 @@ class _AddIncomeState extends State<AddIncome> {
                 builder: (context, ref, widget) => TextButton(
                     onPressed: () {
                       verification(ref);
+                      Navigator.pop(context);
                     },
                     child: (_destinitation == null)
                         ? const Text("Add")

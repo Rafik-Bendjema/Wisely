@@ -6,9 +6,8 @@ class Source {
   late String id;
   final String title;
   final int amount;
-  final int color;
 
-  Source({required this.title, required this.amount, required this.color}) {
+  Source({required this.title, required this.amount}) {
     id = uuid.v1();
   }
 
@@ -16,7 +15,6 @@ class Source {
     required this.id,
     required this.title,
     required this.amount,
-    required this.color,
   });
 
   // Factory constructor to create Source from a map
@@ -25,7 +23,6 @@ class Source {
       id: map['id'],
       title: map['title'],
       amount: map['amount'],
-      color: map['color'],
     );
   }
 
@@ -34,7 +31,6 @@ class Source {
       'id': id,
       'title': title,
       'amount': amount,
-      'color': color,
     };
   }
 
@@ -42,6 +38,11 @@ class Source {
   bool operator ==(Object other) {
     return identical(this, other) ||
         other is Source && runtimeType == other.runtimeType && id == other.id;
+  }
+
+  @override
+  String toString() {
+    return "$id $title $amount";
   }
 
   @override

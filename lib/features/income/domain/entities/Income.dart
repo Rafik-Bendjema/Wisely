@@ -9,13 +9,13 @@ class Income {
   final String title;
   final int amount;
   final DateTime date;
-  final Source? source;
+  final Source source;
 
   Income({
     required this.title,
     required this.amount,
     required this.date,
-    this.source,
+    required this.source,
   }) {
     id = uuid.v1();
   }
@@ -36,7 +36,7 @@ class Income {
       'title': title,
       'amount': amount,
       'date_inc': date.toString(),
-      'source': source?.id,
+      'source': source.id,
     };
   }
 
