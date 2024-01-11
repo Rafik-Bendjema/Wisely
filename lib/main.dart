@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wisely/core/splash/presentation/Splash_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+//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
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   //opening the database
@@ -19,28 +19,7 @@ class MainApp extends StatefulWidget {
 class _MainAppState extends State<MainApp> {
   @override
   void initState() {
-    checkFirstTimeUser();
     super.initState();
-  }
-
-  Future<void> checkFirstTimeUser() async {
-    bool isFirstTimeUser = true;
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
-
-    setState(() {
-      isFirstTimeUser = isFirstTime;
-    });
-
-    if (isFirstTime) {
-      // Perform actions for the first time user
-      // For example, show onboarding screens, tutorials, etc.
-
-      // Set isFirstTime to false to indicate that the user has launched the app before
-      prefs.setBool('isFirstTime', false);
-    }
-    print("this is the first time ? $isFirstTime");
   }
 
   @override

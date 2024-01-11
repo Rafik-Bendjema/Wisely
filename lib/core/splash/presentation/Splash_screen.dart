@@ -2,12 +2,13 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wisely/core/database/DataBase.dart';
-import 'package:wisely/core/home/presentation/home_view.dart';
 import 'package:wisely/features/Source/domain/riverpod/SourceProvider.dart';
 import 'package:wisely/features/categorise/domain/riverpod/CategoryProvider.dart';
 import 'package:wisely/features/income/domain/riverpod/IncomProvider.dart';
+import 'package:wisely/features/introduction/presentation/pages/Introduction.dart';
 import '../../../features/expenses/domain/riverpod/ExpensesProvider.dart';
 import 'clipper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Splash extends StatefulWidget {
   const Splash({super.key});
@@ -20,9 +21,32 @@ class _SplashState extends State<Splash> {
   double _opacity = 0;
   @override
   void initState() {
-    // TODO: implement initState
+    checkFirstTimeUser();
     super.initState();
     fading();
+  }
+
+  bool firstTime = true;
+
+  Future<void> checkFirstTimeUser() async {
+    bool isFirstTimeUser = true;
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
+
+    setState(() {
+      isFirstTimeUser = isFirstTime;
+    });
+
+    if (isFirstTime) {
+      // Perform actions for the first time user
+      // For example, show onboarding screens, tutorials, etc.
+
+      // Set isFirstTime to false to indicate that the user has launched the app before
+      prefs.setBool('isFirstTime', false);
+    }
+    firstTime = isFirstTime;
+    print("this is the first time ? $isFirstTime");
   }
 
   void fading() async {
@@ -32,8 +56,20 @@ class _SplashState extends State<Splash> {
         _opacity = 1;
       });
       Future.delayed(const Duration(seconds: 4)).then((value) => {
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => const HomeView()))
+            if (firstTime)
+              {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const Introduction()))
+              }
+            else
+              {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const Introduction()))
+              }
           });
     });
   }
